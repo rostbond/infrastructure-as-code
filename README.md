@@ -1,6 +1,6 @@
 # Homelab Infrastructure as Code
 
-![CI/CD Status](https://github.com/rostbond/infrastructure-as-code/actions/workflows/deploy.yml/badge.svg?style=for-the-badge)
+![CI/CD Status](https://img.shields.io/github/actions/workflow/status/rostbond/infrastructure-as-code/deploy.yml?branch=main&style=for-the-badge&logo=github&label=CI/CD%20Deploy)
 ![Ansible Lint](https://img.shields.io/badge/Ansible--Lint-passing-brightgreen?style=for-the-badge&logo=ansible)
 
 ![Ansible](https://img.shields.io/badge/Ansible-2.16%2B-red?style=for-the-badge&logo=ansible&logoColor=white)
