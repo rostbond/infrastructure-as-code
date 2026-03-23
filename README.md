@@ -1,7 +1,7 @@
 # Homelab Infrastructure as Code
 
-![CI/CD Status](https://github.com/rostbond/infrastructure-as-code/actions/workflows/deploy.yml/badge.svg)
-![Ansible Lint](https://img.shields.io/badge/Ansible--Lint-passing-brightgreen?style=flat&logo=ansible)
+![CI/CD Status](https://github.com/rostbond/infrastructure-as-code/actions/workflows/deploy.yml/badge.svg?style=for-the-badge)
+![Ansible Lint](https://img.shields.io/badge/Ansible--Lint-passing-brightgreen?style=for-the-badge&logo=ansible)
 
 ![Ansible](https://img.shields.io/badge/Ansible-2.16%2B-red?style=for-the-badge&logo=ansible&logoColor=white)
 ![Podman](https://img.shields.io/badge/Podman-Rootless-892CA0?style=for-the-badge&logo=podman&logoColor=white)
