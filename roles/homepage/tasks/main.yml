@@ -1,0 +1,100 @@
+---
+- name: Wait for system to become reachable
+  ansible.builtin.wait_for_connection:
+    timeout: 60
+
+- name: Now gather facts
+  ansible.builtin.setup:
+
+- name: Update apt cache if it's older than 1 hour
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600 # 3,600 seconds = 1 hour
+
+- name: Install required packages
+  ansible.builtin.package:
+    name:
+      - nodejs
+      - npm
+      - git
+    state: present
+
+- name: Ensure Homepage directory exist
+  ansible.builtin.file:
+    path: "/opt/homepage"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Check pnpm version
+  ansible.builtin.command: "/bin/pnpm --version"
+  register: homepage_pnpm_version
+  failed_when: false
+  changed_when: false
+
+- name: Install pnpm
+  ansible.builtin.command: "npm install -g pnpm"
+  changed_when: false
+  when: homepage_pnpm_version.rc != 0
+
+- name: Get sources from git
+  ansible.builtin.git:
+    repo: "https://github.com/gethomepage/homepage.git"
+    dest: /opt/homepage
+    version: main
+    force: false
+    update: true
+  notify: Rebuild homepage
+
+- name: Ensure config directory exists
+  ansible.builtin.file:
+    path: /opt/homepage/config
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Copy configuration files
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "/opt/homepage/config/{{ item }}"
+    owner: root
+    group: root
+    mode: '0644'
+  loop:
+    - bookmarks.yaml
+    - custom.css
+    - custom.js
+    - settings.yaml
+
+- name: Create services.yaml configuration file from template
+  ansible.builtin.template:
+    src: services.yaml.j2
+    dest: "/opt/homepage/config/services.yaml"
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Create widgets.yaml configuration file from template
+  ansible.builtin.template:
+    src: widgets.yaml.j2
+    dest: "/opt/homepage/config/widgets.yaml"
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Create service
+  ansible.builtin.copy:
+    src: homepage.service
+    dest: /lib/systemd/system/homepage.service
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Reload systemd
+
+- name: Ensure service is running
+  ansible.builtin.systemd:
+    name: homepage
+    state: started
+    enabled: true

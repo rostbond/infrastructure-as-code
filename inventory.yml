@@ -1,0 +1,187 @@
+---
+all:
+  hosts:
+    proxmox:
+      ansible_host: 10.2.84.7
+
+    caddy:
+      vmid: 100
+      ansible_host: 10.2.84.100
+      hostname: caddy
+      mac: "bc:24:11:a4:3a:d7"
+      cores: 2
+      memory: 512
+      disk: 4
+
+    adguard:
+      vmid: 101
+      ansible_host: 10.2.84.101
+      hostname: adguard
+      mac: "bc:24:11:a4:31:01"
+      cores: 2
+      memory: 1024
+      disk: 4
+
+    plex:
+      vmid: 102
+      ansible_host: 10.2.84.102
+      hostname: plex
+      mac: "bc:24:11:0c:8e:1d"
+      unprivileged: false
+      cores: 4
+      memory: 2048
+      disk: 20
+      mounts:
+        mp0: "/data/media,mp=/media,backup=0"
+        mp1: "/data/.config/containers/plex,mp=/var/lib/plexmediaserver/Library/Application\ Support/Plex\ Media\ Server/,backup=0"
+        dev0: "/dev/dri/card0,gid=44"
+        dev1: "/dev/dri/renderD128,gid=104"
+
+    prowlarr:
+      vmid: 103
+      ansible_host: 10.2.84.103
+      hostname: prowlarr
+      mac: "bc:24:11:59:63:b9"
+      cores: 2
+      memory: 512
+      disk: 4
+      mounts:
+        mp0: "/data/.config/containers/prowlarr,mp=/var/lib/prowlarr,backup=0"
+
+    radarr:
+      vmid: 104
+      ansible_host: 10.2.84.104
+      hostname: radarr
+      mac: "bc:24:11:14:5f:d7"
+      unprivileged: false
+      cores: 2
+      memory: 1024
+      disk: 4
+      mounts:
+        mp0: "/data/.config/containers/radarr,mp=/var/lib/radarr,backup=0"
+        mp1: "/data/media/movies,mp=/movies,backup=0"
+        mp2: "/mnt/ultra/downloads/transmission,mp=/downloads,backup=0"
+
+    sonarr:
+      vmid: 105
+      ansible_host: 10.2.84.105
+      hostname: sonarr
+      mac: "bc:24:11:a0:a7:0b"
+      unprivileged: false
+      cores: 2
+      memory: 1024
+      disk: 4
+      mounts:
+        mp0: "/data/.config/containers/sonarr,mp=/var/lib/sonarr,backup=0"
+        mp1: "/data/media/shows,mp=/shows,backup=0"
+        mp2: "/mnt/ultra/downloads/transmission,mp=/downloads,backup=0"
+
+    speedtest:
+      vmid: 106
+      ansible_host: 10.2.84.106
+      hostname: speedtest
+      mac: "bc:24:11:22:b5:f6"
+      cores: 2
+      memory: 1024
+      disk: 4
+      mounts:
+        mp0: "/data/.config/containers/speedtest,mp=/config,backup=0"
+
+    bar-assistant:
+      vmid: 107
+      ansible_host: 10.2.84.107
+      hostname: bar-assistant
+      mac: "bc:24:11:4f:a2:9d"
+      cores: 2
+      memory: 1024
+      disk: 4
+      mounts:
+        mp0: "/data/.config/containers/bar-assistant,mp=/config,backup=0"
+
+    paperless:
+      vmid: 108
+      ansible_host: 10.2.84.108
+      hostname: paperless-ngx
+      mac: "bc:24:11:ec:d5:bd"
+      cores: 4
+      memory: 2048
+      disk: 20
+      mounts:
+        mp0: "/data/.config/containers/paperless,mp=/config,backup=0"
+        mp1: "/data/docs,mp=/data,backup=0"
+
+    fresh-rss:
+      vmid: 109
+      ansible_host: 10.2.84.109
+      hostname: fresh-rss
+      mac: "bc:24:11:8a:f3:5d"
+      cores: 2
+      memory: 1024
+      disk: 4
+      mounts:
+        mp0: "/data/.config/containers/fresh-rss,mp=/config,backup=0"
+
+    pocket-id:
+      vmid: 110
+      ansible_host: 10.2.84.110
+      hostname: pocket-id
+      mac: "bc:24:11:7a:9f:2c"
+      cores: 2
+      memory: 512
+      disk: 4
+      mounts:
+        mp0: "/data/.config/containers/pocket-id,mp=/opt/pocket-id/data,backup=0"
+
+    homepage:
+      vmid: 111
+      ansible_host: 10.2.84.111
+      hostname: homepage
+      mac: "bc:24:11:ee:26:a9"
+      cores: 2
+      memory: 1025
+      disk: 6
+
+    gitea:
+      vmid: 112
+      ansible_host: 10.2.84.112
+      hostname: gitea
+      mac: "bc:24:11:f7:3c:22"
+      cores: 2
+      memory: 512
+      disk: 4
+      mounts:
+        mp0: "/data/.config/containers/gitea,mp=/var/lib/gitea/data,backup=0"
+
+    immich:
+      vmid: 114
+      ansible_host: 10.2.84.114
+      hostname: immich
+      mac: "bc:24:11:2e:9b:c4"
+      cores: 8
+      memory: 8192
+      disk: 20
+      mounts:
+        mp0: "/data/media/photos/immich,mp=/photos,backup=0"
+        mp1: "/data/.config/containers/immich,mp=/postgres,backup=0"
+
+  children:
+    hypervisor:
+      hosts:
+        proxmox: {}
+
+    lxc:
+      hosts:
+        caddy: {}
+        adguard: {}
+        plex: {}
+        prowlarr: {}
+        radarr: {}
+        sonarr: {}
+        bar-assistant: {}
+        speedtest: {}
+        paperless: {}
+        homepage: {}
+        gitea: {}
+        fresh-rss: {}
+        pocket-id: {}
+        immich: {}

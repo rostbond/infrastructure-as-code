@@ -1,0 +1,36 @@
+---
+- name: Ensure LXCs are present
+  community.proxmox.proxmox:
+    vmid: "{{ item.vmid }}"
+    hostname: "{{ item.hostname }}"
+    node: "{{ proxmox_node }}"
+    cores: "{{ item.cores }}"
+    memory: "{{ item.memory }}"
+    disk: "{{ proxmox_storage }}:{{ item.disk }}"
+    unprivileged: "{{ item.unprivileged | default(true) }}"
+    netif:
+      net0: "name=eth0\
+        ,bridge=vmbr0\
+        ,ip={{ item['ansible_host'] }}/24\
+        ,gw=10.2.84.1\
+        {% if item.mac is defined %}\
+        ,hwaddr={{ item.mac }}\
+        {% endif %}"
+    mounts: "{{ item.mounts | default({}) }}"
+    tags:
+      - "ansible"
+    state: present
+  loop: "{{ groups['lxc'] | map('extract', hostvars) | list }}"
+  loop_control:
+    label: "{{ item.hostname }}" # Output hostname only
+  delegate_to: localhost
+
+- name: Ensure LXCs are running
+  community.proxmox.proxmox:
+    vmid: "{{ item.vmid }}"
+    node: "{{ proxmox_node }}"
+    state: started
+  loop: "{{ groups['lxc'] | map('extract', hostvars) | list }}"
+  loop_control:
+    label: "{{ item.hostname }}" # Output hostname only
+  delegate_to: localhost

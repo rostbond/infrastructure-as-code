@@ -1,0 +1,116 @@
+---
+- name: Wait for system to become reachable
+  ansible.builtin.wait_for_connection:
+    timeout: 60
+
+- name: Now gather facts
+  ansible.builtin.setup:
+
+- name: Install required packages
+  ansible.builtin.package:
+    name:
+      - podman
+      - slirp4netns
+      - fuse-overlayfs
+    update_cache: true
+    state: present
+
+- name: Create a network in Podman
+  containers.podman.podman_network:
+    name: "immich_network"
+
+- name: Allow user to start processes after the SSH logout (Linger)
+  ansible.builtin.command: "loginctl enable-linger {{ ansible_user }}"
+  register: immich_linger_check
+  changed_when: false
+
+- name: Setup Redis
+  containers.podman.podman_container:
+    name: immich-redis
+    image: >
+      docker.io/valkey/valkey:9
+      @sha256:fb8d272e529ea567b9bf1302245796f21a2672b8368ca3fcb938ac334e613c8f
+    network: "immich_network"
+    state: present
+    generate_systemd:
+      path: "/etc/systemd/system/"
+      restart_policy: always
+      names: true
+      new: true
+
+- name: Setup Postgres
+  containers.podman.podman_container:
+    name: immich-db
+    image: >
+      ghcr.io/immich-app/postgres:14-vectorchord0.4.3-pgvectors0.2.0
+      @sha256:bcf63357191b76a916ae5eb93464d65c07511da41e3bf7a8416db519b40b1c23
+    network: "immich_network"
+    state: present
+    volumes:
+      - "/postgres:/var/lib/postgresql/data:Z"
+    env:
+      POSTGRES_DB: immich
+      POSTGRES_USER: "{{ vault_immich_db_user }}"
+      POSTGRES_PASSWORD: "{{ vault_immich_db_password }}"
+      POSTGRES_INITDB_ARGS: "--data-checksums"
+    generate_systemd:
+      path: "/etc/systemd/system/"
+      restart_policy: always
+      names: true
+      new: true
+
+- name: Setup Machine Learning
+  containers.podman.podman_container:
+    name: immich-machine-learning
+    image: ghcr.io/immich-app/immich-machine-learning:release
+    network: "immich_network"
+    state: present
+    volumes:
+      - "model-cache:/cache"
+    generate_systemd:
+      path: "/etc/systemd/system/"
+      restart_policy: always
+      names: true
+      new: true
+
+- name: Setup Immich
+  containers.podman.podman_container:
+    name: immich-app
+    image: ghcr.io/immich-app/immich-server:release
+    network: "immich_network"
+    state: created
+    ports:
+      - "2283:2283"
+    volumes:
+      - "/photos:/usr/src/app/upload:Z"
+      - "/etc/localtime:/etc/localtime:ro"
+    env:
+      IMMICH_MACHINE_LEARNING_URL: http://immich-machine-learning:3003
+      REDIS_HOSTNAME: "immich-redis"
+      DB_HOSTNAME: "immich-db"
+    generate_systemd:
+      path: "/etc/systemd/system/"
+      restart_policy: always
+      names: true
+      new: true
+      after:
+        - container-immich-redis.service
+        - container-immich-db.service
+        - container-immich-machine-learning.service
+
+- name: Ensure services are enabled and running
+  ansible.builtin.systemd:
+    name: "container-{{ item }}"
+    enabled: true
+    state: started
+    daemon_reload: true
+  loop:
+    - immich-db
+    - immich-redis
+    - immich-machine-learning
+    - immich-app
+
+- name: Cleanup old exited containers
+  containers.podman.podman_prune:
+    container: true
+    network: true

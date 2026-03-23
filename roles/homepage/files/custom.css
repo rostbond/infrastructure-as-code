@@ -1,0 +1,134 @@
+:root {
+    --ayu-bg: #1f2430;
+    --ayu-fg: #cbccc6;
+    --ayu-accent: #ffcc66;
+    --ayu-blue: #73d0ff;
+    --ayu-green: #95e6cb;
+    --ayu-coral: #f28779;
+    --ayu-muted: #5c6773;
+}
+
+body {
+    background-color: var(--ayu-bg) !important;
+    color: var(--ayu-fg) !important;
+    font-family: 'Fira Code', monospace !important;
+}
+
+#color {
+    display: none;
+}
+
+#revalidate {
+    display: none;
+}
+
+#widgets-wrap {
+    display: flex !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+}
+
+#information-widgets-right {
+    display: none !important;
+}
+
+#widgets-wrap > a:last-of-type {
+    margin-left: auto !important;
+}
+
+.information-widget-unifi-console { margin-left: 0 !important; }
+.information-widget-resources { margin-right: 0 !important; }
+
+.group-title {
+    color: var(--ayu-accent) !important;
+    text-transform: lowercase;
+    letter-spacing: 1px;
+}
+
+.card, .group-wrapper {
+    background-color: rgba(31, 36, 48, 0.6) !important;
+    backdrop-filter: blur(12px) !important;
+    border: 1px solid rgba(171, 178, 191, 0.1) !important;
+    border-radius: 12px !important;
+}
+
+.service-name {
+    color: var(--ayu-accent) !important;
+    font-weight: 600 !important;
+}
+
+.service-icon img {
+    filter: brightness(0.8) saturate(0.8) !important;
+    transition: all 0.3s ease;
+}
+.service-title:hover .service-icon img {
+    filter: brightness(1) saturate(1) !important;
+}
+
+.bg-emerald-500, .bg-green-500 { background-color: var(--ayu-green) !important; }
+.bg-red-500 { background-color: var(--ayu-coral) !important; }
+.bg-yellow-500 { background-color: var(--ayu-accent) !important; }
+
+.information-widget-unifi-console div[title="Users"],
+.information-widget-unifi-console div[title="Clients"],
+.information-widget-unifi-console .flex-col svg[viewBox="0 0 24 24"]:not(.w-3) {
+    display: none !important;
+}
+
+.information-widget-unifi-console .flex-none.flex-row {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+}
+
+.information-widget-unifi-console svg:first-of-type {
+    color: var(--ayu-accent) !important;
+    fill: var(--ayu-accent) !important;
+    width: 26px !important;
+    height: 26px !important;
+    margin-bottom: 4px !important;
+}
+
+.information-widget-unifi-console .font-bold {
+    color: var(--ayu-accent) !important;
+    font-size: 1.25rem !important;
+    margin-left: 0 !important;
+    display: block !important;
+}
+
+.information-widget-unifi-console .text-\[10px\] {
+    color: var(--ayu-muted) !important;
+    font-size: 11px !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 8px !important;
+    margin-left: 0 !important;
+    justify-content: right;
+}
+
+.information-widget-unifi-console .text-\[10px\] .flex-row {
+    display: flex !important;
+    align-items: center !important;
+    line-height: 1 !important;
+}
+
+.information-widget-unifi-console .text-\[10px\] svg {
+    order: -1 !important;
+    color: var(--ayu-green) !important;
+    fill: var(--ayu-green) !important;
+    width: 10px !important;
+    height: 10px !important;
+    margin-right: 2px !important;
+    margin-top: 0px !important;
+    align-self: center !important;
+    display: block !important;
+    transform: translateY(1.5px) !important;
+}
+
+.information-widget-unifi-console .flex-col:last-child:not(:first-child) {
+    display: none !important;
+}
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--ayu-muted); border-radius: 10px; }

@@ -1,0 +1,11 @@
+---
+- name: Restart service
+  ansible.builtin.systemd:
+    name: caddy
+    state: restarted
+
+- name: Reminder to approve exit node
+  ansible.builtin.debug:
+    msg: >-
+      ACTION REQUIRED:
+      Approve the exit node in the Tailscale admin console to enable routing.

@@ -1,0 +1,128 @@
+---
+- name: Wait for system to become reachable
+  ansible.builtin.wait_for_connection:
+    timeout: 60
+
+- name: Now gather facts
+  ansible.builtin.setup:
+
+- name: Install required packages
+  ansible.builtin.package:
+    name:
+      - podman
+      - slirp4netns
+      - fuse-overlayfs
+    update_cache: true
+    state: present
+
+- name: Create a network in Podman
+  containers.podman.podman_network:
+    name: "bar_assistant_network"
+
+- name: Allow user to start processes after the SSH logout (Linger)
+  ansible.builtin.command: "loginctl enable-linger {{ ansible_user }}"
+  changed_when: false
+
+- name: Setup Redis
+  containers.podman.podman_container:
+    name: bar-assistant-redis
+    image: docker.io/library/redis:latest
+    network: "bar_assistant_network"
+    state: present
+    env:
+      ALLOW_EMPTY_PASSWORD: true
+    generate_systemd:
+      path: "/etc/systemd/system/"
+      restart_policy: always
+      names: true
+      new: true
+
+- name: Setup Meilisearch
+  containers.podman.podman_container:
+    name: bar-assistant-meilisearch
+    image: docker.io/getmeili/meilisearch:v1.15
+    network: "bar_assistant_network"
+    state: present
+    volumes:
+      - "/config/meilisearch:/meili_data:Z"
+    ports:
+      - "7700:7700"
+    env:
+      MEILI_NO_ANALYTICS: "true"
+      MEILI_MASTER_KEY: "{{ vault_bar_assistant_meili_key }}"
+      MEILI_ENV: production
+    generate_systemd:
+      path: "/etc/systemd/system/"
+      restart_policy: always
+      names: true
+      new: true
+
+- name: Setup backend
+  containers.podman.podman_container:
+    name: bar-assistant-backend
+    image: docker.io/barassistant/server:v5
+    network: "bar_assistant_network"
+    state: present
+    volumes:
+      - "/config/bar:/var/www/cocktails/storage/bar-assistant:Z"
+    ports:
+      - "8082:8080"
+    env:
+      APP_ENV: local
+      APP_URL: https://bar.legoland.tech/bar
+      MEILISEARCH_KEY: "{{ vault_bar_assistant_meili_key }}"
+      MEILISEARCH_HOST: http://bar-assistant-meilisearch:7700
+      REDIS_HOST: tcp://bar-assistant-redis
+      REDIS_PORT: 6379
+      CACHE_DRIVER: redis
+      SESSION_DRIVER: redis
+      ALLOW_REGISTRATION: false
+      POCKETID_BASE_URL: https://id.legoland.tech
+      POCKETID_CLIENT_ID: "{{ vault_bar_assistant_pocket_id_client_id }}"
+      POCKETID_CLIENT_SECRET: >-
+        "{{ vault_bar_assistant_pocket_id_client_secret }}"
+      POCKETID_REDIRECT_URI: https://bar.legoland.tech/oauth/callback
+    generate_systemd:
+      path: "/etc/systemd/system/"
+      restart_policy: always
+      names: true
+      new: true
+      after:
+        - container-bar-assistant-meilisearch.service
+        - container-bar-assistant-redis.service
+
+- name: Setup frontend
+  containers.podman.podman_container:
+    name: bar-assistant-frontend
+    image: docker.io/barassistant/salt-rim:v4
+    network: "bar_assistant_network"
+    state: present
+    ports:
+      - "8080:8080"
+    env:
+      API_URL: https://bar.legoland.tech/bar
+      MEILISEARCH_URL: https://bar.legoland.tech/search
+    generate_systemd:
+      path: "/etc/systemd/system/"
+      restart_policy: always
+      names: true
+      new: true
+      after:
+        - container-bar-assistant-backend.service
+
+- name: Ensure services are enabled and running
+  ansible.builtin.systemd:
+    name: "container-{{ item }}"
+    enabled: true
+    state: started
+    daemon_reload: true
+  loop:
+    - bar-assistant-redis
+    - bar-assistant-meilisearch
+    - bar-assistant-backend
+    - bar-assistant-frontend
+
+- name: Cleanup old exited containers
+  containers.podman.podman_prune:
+    container: true
+    network: true

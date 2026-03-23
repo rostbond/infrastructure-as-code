@@ -1,0 +1,71 @@
+---
+- name: Wait for system to become reachable
+  ansible.builtin.wait_for_connection:
+    timeout: 60
+
+- name: Now gather facts
+  ansible.builtin.setup:
+
+- name: Ensure Pocket ID directory exists
+  ansible.builtin.file:
+    path: "/opt/pocket-id"
+    state: directory
+    mode: '0755'
+
+- name: Update apt cache if it's older than 1 hour
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600 # 3,600 seconds = 1 hour
+
+- name: Install required packages
+  ansible.builtin.package:
+    name:
+      - sqlite3
+      - git
+    state: present
+
+- name: Get latest release metadata from GitHub
+  ansible.builtin.uri:
+    url: "https://api.github.com/repos/pocket-id/pocket-id/releases/latest"
+    return_content: true
+    status_code: 200
+  register: pocket_id_api_response
+
+- name: Download Pocket ID binary
+  ansible.builtin.get_url:
+    url: |
+      {{
+        pocket_id_api_response.json.assets
+        | selectattr('name', 'equalto', 'pocket-id-linux-amd64')
+        | map(attribute='browser_download_url')
+        | first
+      }}
+    dest: "/opt/pocket-id/pocket-id"
+    mode: '0755'
+    owner: root
+    group: root
+
+- name: Create config file from template
+  ansible.builtin.template:
+    src: .env.j2
+    dest: /opt/pocket-id/.env
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Restart service
+
+- name: Create service
+  ansible.builtin.copy:
+    src: pocket-id.service
+    dest: /lib/systemd/system/pocket-id.service
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Reload systemd
+
+- name: Ensure service is enabled and running
+  ansible.builtin.systemd:
+    name: pocket-id
+    state: started
+    enabled: true
+    daemon_reload: true

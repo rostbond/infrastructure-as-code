@@ -1,0 +1,6 @@
+.ansible/
+.ansible_cache/
+.vscode/
+*.swp
+*.retry
+ansible.log

@@ -1,0 +1,17 @@
+[Unit]
+Description=Gitea (Git with a cup of tea)
+After=network.target
+
+[Service]
+RestartSec=2s
+Type=simple
+User=git
+Group=git
+WorkingDirectory=/var/lib/gitea/
+ExecStart=/var/lib/gitea/gitea web --config /etc/gitea/app.ini
+Restart=always
+Environment=USER=git HOME=/root GITEA_WORK_DIR=/var/lib/gitea
+Environment=PATH=/var/lib/gitea:/bin:/sbin:/usr/bin:/usr/sbin
+
+[Install]
+WantedBy=multi-user.target

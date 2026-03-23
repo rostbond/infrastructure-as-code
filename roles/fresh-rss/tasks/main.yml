@@ -1,0 +1,68 @@
+---
+- name: Wait for system to become reachable
+  ansible.builtin.wait_for_connection:
+    timeout: 60
+
+- name: Now gather facts
+  ansible.builtin.setup:
+
+- name: Install required packages
+  ansible.builtin.package:
+    name:
+      - podman
+      - slirp4netns
+      - fuse-overlayfs
+    update_cache: true
+    state: present
+
+- name: Create a network in Podman
+  containers.podman.podman_network:
+    name: "fresh_rss_network"
+
+- name: Allow user to start processes after the SSH logout (Linger)
+  ansible.builtin.command: "loginctl enable-linger {{ ansible_user }}"
+  register: speedtest_linger_check
+  changed_when: false
+
+- name: Setup Fresh RSS
+  containers.podman.podman_container:
+    name: fresh-rss
+    image: docker.io/freshrss/freshrss:latest
+    network: "fresh_rss_network"
+    state: present
+    recreate: true
+    ports:
+      - "8088:80"
+    volumes:
+      - "/config/data:/var/www/FreshRSS/data:Z"
+      - "/config/extensions:/var/www/FreshRSS/extensions:Z"
+    env:
+      TZ: Europe/Madrid
+      CRON_MIN: "3,33"
+      TRUSTED_PROXY: 172.16.0.1/12 192.168.0.1/16
+      OIDC_ENABLED: 1
+      OIDC_CLIENT_ID: "{{ vault_fresh_rss_pocket_id_client_id }}"
+      OIDC_CLIENT_SECRET: "{{ vault_bar_assistant_pocket_id_client_secret }}"
+      OIDC_CLIENT_CRYPTO_KEY: "{{ vault_fresh_rss_pocket_id_crypto_key }}"
+      OIDC_PROVIDER_METADATA_URL: >-
+        https://id.legoland.tech/.well-known/openid-configuration
+      OIDC_SCOPES: openid email profile
+      OIDC_X_FORWARDED_HEADERS: X-Forwarded-Proto X-Forwarded-Host
+      OIDC_REMOTE_USER_CLAIM: preferred_username
+    generate_systemd:
+      path: "/etc/systemd/system/"
+      restart_policy: always
+      names: true
+      new: true
+
+- name: Ensure service is enabled and running
+  ansible.builtin.systemd:
+    name: container-fresh-rss
+    state: started
+    enabled: true
+    daemon_reload: true
+
+- name: Cleanup old exited containers
+  containers.podman.podman_prune:
+    container: true
+    network: true

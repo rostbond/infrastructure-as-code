@@ -1,0 +1,11 @@
+---
+collections:
+  - name: containers.podman
+    version: 1.19.0
+
+  - name: community.general
+    version: 12.4.0
+
+  - name: community.proxmox
+    version: 2.0.0-beta01
+  

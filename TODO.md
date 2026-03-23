@@ -1,0 +1,21 @@
+# Things to do:
+
+- [ ] Install required packages on PVE: 
+  - [ ] fonts-powerline
+  - [ ] git
+  - [ ] curl
+  - [ ] mc
+  - [ ] unattended-upgrades
+  - [ ] restic
+  - [ ] rclone
+  - [ ] vim
+- [ ] Add restic/rclone creds to vault
+- [ ] Install resticprofile
+- [ ] Copy resticprofile config from template
+- [ ] Schedule resticprofile
+- [ ] Copy rclone config
+- [ ] Add fstab record for ultra
+- [ ] Add /data mount point
+- [ ] Add PBS mount point
+- [ ] Setup Gatus ping
+- [ ] Schedule backups to PBS

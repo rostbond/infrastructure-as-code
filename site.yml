@@ -1,0 +1,219 @@
+---
+- name: Infrastructure provisioning
+  hosts: proxmox
+  tags: proxmox
+  module_defaults:
+    community.proxmox.proxmox:
+      api_host: "{{ proxmox_host }}"
+      api_user: "{{ vault_proxmox_api_user }}"
+      api_password: "{{ vault_proxmox_api_password }}"
+      validate_certs: false
+      pubkey: "{{ lookup('file', ssh_key) | trim }}"
+      ostemplate: "{{ proxmox_os_template }}"
+      storage: "{{ proxmox_storage }}"
+      update: true
+      unprivileged: true
+      onboot: true
+      features:
+        - nesting=1
+        - keyctl=1
+  roles:
+    - proxmox
+
+- name: Fix Cyrillic display in LXC
+  hosts: lxc
+  tags: proxmox
+  become: true
+  gather_facts: false
+  tasks:
+    - name: Wait for system to become reachable
+      ansible.builtin.wait_for_connection:
+        timeout: 60
+
+    - name: Ensure locales package is installed
+      ansible.builtin.package:
+        name: locales
+        state: present
+        update_cache: true
+        cache_valid_time: 3600 # 3,600 seconds = 1 hour
+
+    - name: Generate ru_RU.UTF-8 locale
+      community.general.locale_gen:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - en_US.UTF-8
+        - ru_RU.UTF-8
+
+    - name: Set default locale to en_US.UTF-8
+      ansible.builtin.debconf:
+        name: locales
+        question: locales/default_environment_locale
+        value: en_US.UTF-8
+        vtype: select
+
+    - name: Ensure /etc/default/locale is correct
+      ansible.builtin.copy:
+        dest: /etc/default/locale
+        owner: root
+        group: root
+        mode: '0644'
+        content: |
+          LANG=en_US.UTF-8
+          LC_ALL=en_US.UTF-8
+        force: true
+
+    - name: Ensure /etc/environment has correct locales
+      ansible.builtin.lineinfile:
+        path: /etc/environment
+        line: "{{ item }}"
+        state: present
+        owner: root
+        group: root
+        mode: '0644'
+      loop:
+        - "LANG=en_US.UTF-8"
+        - "LC_ALL=en_US.UTF-8"
+
+- name: Configure agnoster on all containers
+  hosts: lxc
+  tags: proxmox
+  become: true
+  gather_facts: false
+  tasks:
+    - name: Wait for system to become reachable
+      ansible.builtin.wait_for_connection:
+        timeout: 60
+
+    - name: Check if theme directory exists
+      ansible.builtin.stat:
+        path: "/root/.bash/themes/agnoster-bash"
+      register: theme_folder
+
+    - name: Install dependencies and clone theme`
+      when: not theme_folder.stat.exists
+      block:
+        - name: Install system dependencies
+          become: true
+          ansible.builtin.package:
+            name:
+              - fonts-powerline
+              - git
+            state: present
+            update_cache: true
+            cache_valid_time: 3600
+
+        - name: Clone theme repository
+          ansible.builtin.git:
+            repo: "https://github.com/speedenator/agnoster-bash.git"
+            dest: "/root/.bash/themes/agnoster-bash"
+            version: f014205
+
+        - name: Update .bashrc
+          ansible.builtin.blockinfile:
+            path: "/root/.bashrc"
+            block: |
+              export THEME=$HOME/.bash/themes/agnoster-bash/agnoster.bash
+
+              if [[ -f $THEME ]]; then
+                export DEFAULT_USER=""
+                source $THEME
+              fi
+
+- name: AdGuard Home setup
+  hosts: adguard
+  tags: adguard
+  gather_facts: false
+  roles:
+    - adguard
+
+- name: Bar Assistant setup
+  hosts: bar-assistant
+  tags: bar-assistant
+  gather_facts: false
+  roles:
+    - bar-assistant
+
+- name: Caddy setup
+  hosts: caddy
+  tags: caddy
+  gather_facts: false
+  roles:
+    - caddy
+
+- name: Fresh RSS setup
+  hosts: fresh-rss
+  tags: fresh-rss
+  gather_facts: false
+  roles:
+    - fresh-rss
+
+- name: Gitea setup
+  hosts: gitea
+  tags: gitea
+  gather_facts: false
+  roles:
+    - gitea
+
+- name: Homepage setup
+  hosts: homepage
+  tags: homepage
+  gather_facts: false
+  roles:
+    - homepage
+
+- name: Immich setup
+  hosts: immich
+  tags: immich
+  gather_facts: false
+  roles:
+    - immich
+
+- name: Paperless setup
+  hosts: paperless
+  tags: paperless
+  gather_facts: false
+  roles:
+    - paperless
+
+- name: Plex setup
+  hosts: plex
+  tags: plex
+  gather_facts: false
+  roles:
+    - plex
+
+- name: Pocket ID setup
+  hosts: pocket-id
+  tags: pocket-id
+  gather_facts: false
+  roles:
+    - pocket-id
+
+- name: Prowlarr setup
+  hosts: prowlarr
+  tags: prowlarr
+  gather_facts: false
+  roles:
+    - prowlarr
+
+- name: Radarr setup
+  hosts: radarr
+  tags: radarr
+  gather_facts: false
+  roles:
+    - radarr
+
+- name: Sonarr setup
+  hosts: sonarr
+  tags: sonarr
+  gather_facts: false
+  roles:
+    - sonarr
+
+- name: Speedtest setup
+  hosts: speedtest
+  tags: speedtest
+  gather_facts: false
+  roles:
+    - speedtest

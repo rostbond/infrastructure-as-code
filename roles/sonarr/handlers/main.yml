@@ -1,0 +1,9 @@
+---
+- name: Reload systemd
+  ansible.builtin.systemd:
+    daemon_reload: true
+
+- name: Restart service
+  ansible.builtin.systemd:
+    name: sonarr
+    state: restarted

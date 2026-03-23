@@ -1,0 +1,19 @@
+---
+title: Legoland
+background:
+theme: dark
+headerStyle: clean
+hideVersion: true
+statusStyle: dot # dot, basic
+target: _self
+disableCollapse: true
+useEqualHeights: true
+iconStyle: theme
+
+layout:
+  Homelab:
+    iconStyle: theme
+
+  Media:
+
+  Utilities:

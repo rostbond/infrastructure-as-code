@@ -1,0 +1,17 @@
+[Unit]
+Description=Homepage
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=root
+WorkingDirectory=/opt/homepage/
+Environment="HOMEPAGE_CONFIG_DIR=/opt/homepage/config"
+Environment="HOMEPAGE_ALLOWED_HOSTS=localhost:3000,10.2.84.111:3000,home.legoland.tech"
+ExecStart=/usr/local/bin/pnpm start
+
+[Install]
+WantedBy=multi-user.target

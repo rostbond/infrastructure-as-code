@@ -1,0 +1,32 @@
+---
+- name: Clean old build
+  ansible.builtin.file:
+    path: /opt/homepage/.next
+    state: absent
+  listen: "Rebuild homepage"
+
+- name: Install dependencies
+  ansible.builtin.command: "pnpm install --frozen-lockfile"
+  args:
+    chdir: /opt/homepage
+    creates: /opt/homepage/node_modules
+  listen: "Rebuild homepage"
+
+- name: Build production
+  ansible.builtin.command: "pnpm build"
+  environment:
+    NODE_OPTIONS: "--max-old-space-size=1024"
+    NEXT_CPU_COUNTS: "1"
+  args:
+    chdir: /opt/homepage
+  changed_when: true
+  listen: "Rebuild homepage"
+
+- name: Reload systemd
+  ansible.builtin.systemd:
+    daemon_reload: true
+
+- name: Restart service
+  ansible.builtin.systemd:
+    name: homepage
+    state: restarted

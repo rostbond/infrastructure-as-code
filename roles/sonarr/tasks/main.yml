@@ -1,0 +1,64 @@
+---
+- name: Wait for system to become reachable
+  ansible.builtin.wait_for_connection:
+    timeout: 60
+
+- name: Now gather facts
+  ansible.builtin.setup:
+
+- name: Update apt cache if it's older than 1 hour
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600 # 3,600 seconds = 1 hour
+
+- name: Install required packages
+  ansible.builtin.package:
+    name:
+      - sqlite3
+      - git
+    state: present
+
+- name: Ensure Sonarr directory exists
+  ansible.builtin.file:
+    path: "/opt/Sonarr"
+    state: directory
+    mode: '0755'
+
+- name: Get the latest Sonarr installation from GitHub
+  ansible.builtin.uri:
+    url: https://api.github.com/repos/Sonarr/Sonarr/releases/latest
+    return_content: true
+  register: sonarr_json_response
+
+- name: Install/Update Sonarr
+  ansible.builtin.unarchive:
+    remote_src: true
+    src: |
+      {{
+        sonarr_json_response.json.assets
+        | selectattr('name', 'search', 'linux-x64.tar.gz$')
+        | map(attribute='browser_download_url')
+        | first
+      }}
+    dest: "/opt/Sonarr"
+    keep_newer: true
+    extra_opts:
+      - --strip=1
+      - --no-anchored
+      - Sonarr
+
+- name: Create service
+  ansible.builtin.copy:
+    src: sonarr.service
+    dest: /lib/systemd/system/sonarr.service
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Reload systemd
+
+- name: Ensure service is enabled and running
+  ansible.builtin.systemd:
+    name: sonarr
+    state: started
+    enabled: true
+    daemon_reload: true

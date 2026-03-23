@@ -1,0 +1,6 @@
+---
+proxmox_host: '10.2.84.7'
+proxmox_node: 'proxmox'
+proxmox_os_template: 'local:vztmpl/debian-13-standard_13.1-2_amd64.tar.zst'
+proxmox_storage: 'local-lvm'
+ssh_key: '~/.ssh/rostbond-mbp.pub'

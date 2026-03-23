@@ -1,0 +1,132 @@
+# Refer to the Caddy docs for more information:
+# https://caddyserver.com/docs/caddyfile
+
+{
+	admin 0.0.0.0:2019
+	email null@legoland.tech
+	acme_dns digitalocean {{ vault_caddy_digital_ocean_token }}
+}
+
+# ----------------------------------------------------------------------
+# Unifi Express
+# ----------------------------------------------------------------------
+
+network.legoland.tech {
+	reverse_proxy 10.2.84.1:443 {
+		transport http {
+			tls_insecure_skip_verify
+		}
+		# header_up -Authorization
+		header_up Host {hostport}
+	}
+}
+
+# ----------------------------------------------------------------------
+# Proxmox
+# ----------------------------------------------------------------------
+
+proxmox.legoland.tech {
+	reverse_proxy 10.2.84.7:8006 {
+		transport http {
+			tls_insecure_skip_verify
+		}
+	}
+}
+
+monitoring.legoland.tech {
+	reverse_proxy 10.2.84.7:61208
+}
+
+# ----------------------------------------------------------------------
+# Containers
+# ----------------------------------------------------------------------
+
+proxy.legoland.tech {
+	reverse_proxy 10.2.84.100:2019
+}
+
+adblock.legoland.tech {
+	reverse_proxy 10.2.84.101:80
+}
+
+plex.legoland.tech {
+	reverse_proxy 10.2.84.102:32400 {
+		transport http {
+			tls_insecure_skip_verify
+		}
+	}
+}
+
+indexer.legoland.tech {
+	reverse_proxy 10.2.84.103:9696
+}
+
+movies.legoland.tech {
+	reverse_proxy 10.2.84.104:7878
+}
+
+tv.legoland.tech {
+	reverse_proxy 10.2.84.105:8989
+}
+
+speedtest.legoland.tech {
+	reverse_proxy 10.2.84.106:8080
+}
+
+bar.legoland.tech {
+    handle_path /* {
+        reverse_proxy 10.2.84.107:8080
+    }
+
+    handle_path /bar* {
+        reverse_proxy 10.2.84.107:8082
+    }
+
+    handle_path /search* {
+        reverse_proxy 10.2.84.107:7700
+    }
+}
+
+docs.legoland.tech {
+	reverse_proxy 10.2.84.108:8000
+}
+
+news.legoland.tech {
+    reverse_proxy 10.2.84.109:8088
+}
+
+id.legoland.tech {
+	reverse_proxy 10.2.84.110:1411
+}
+
+home.legoland.tech {
+	reverse_proxy 10.2.84.111:3000
+}
+
+git.legoland.tech {
+    reverse_proxy 10.2.84.112:3000
+}
+
+# 113
+
+photos.legoland.tech {
+	reverse_proxy 10.2.84.114:2283
+}
+
+# ----------------------------------------------------------------------
+# Remote machines
+# ----------------------------------------------------------------------
+
+torrents.legoland.tech {
+    tls internal
+
+    reverse_proxy https://homelab.triton.usbx.me {
+        transport http {
+            tls_insecure_skip_verify
+        }
+
+        header_up Host homelab.triton.usbx.me
+        header_up X-Forwarded-For {remote_host}
+        header_up X-Forwarded-Proto https
+    }
+}

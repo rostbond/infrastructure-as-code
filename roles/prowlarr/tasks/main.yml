@@ -1,0 +1,72 @@
+---
+- name: Wait for system to become reachable
+  ansible.builtin.wait_for_connection:
+    timeout: 60
+
+- name: Now gather facts
+  ansible.builtin.setup:
+
+- name: Create group and user
+  ansible.builtin.user:
+    name: prowlarr
+    uid: 1000
+    shell: /bin/bash
+    create_home: false
+    state: present
+
+- name: Update apt cache if it's older than 1 hour
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600 # 3,600 seconds = 1 hour
+
+- name: Install required packages
+  ansible.builtin.package:
+    name:
+      - sqlite3
+      - git
+    state: present
+
+- name: Ensure Prowlarr directory exists
+  ansible.builtin.file:
+    path: "/opt/Prowlarr"
+    state: directory
+    mode: '0755'
+
+- name: Get the latest Prowlarr installation from GitHub
+  ansible.builtin.uri:
+    url: https://api.github.com/repos/Prowlarr/Prowlarr/releases/latest
+    return_content: true
+  register: prowlarr_json_response
+
+- name: Install/Update Prowlarr
+  ansible.builtin.unarchive:
+    remote_src: true
+    src: |
+      {{
+        prowlarr_json_response.json.assets
+        | selectattr('name', 'search', 'linux-core-x64.tar.gz$')
+        | map(attribute='browser_download_url')
+        | first
+      }}
+    dest: "/opt/Prowlarr"
+    keep_newer: true
+    extra_opts:
+      - --strip=1
+      - --no-anchored
+      - Prowlarr
+
+- name: Create service
+  ansible.builtin.copy:
+    src: prowlarr.service
+    dest: /lib/systemd/system/prowlarr.service
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Reload systemd
+
+- name: Ensure service is enabled and running
+  ansible.builtin.systemd:
+    name: prowlarr
+    state: started
+    enabled: true
+    daemon_reload: true

@@ -1,0 +1,116 @@
+---
+- Homelab:
+    - Unifi:
+        icon: si-ubiquiti-#E2E8F0
+        href: https://network.legoland.tech/network/default/dashboard
+        siteMonitor: https://10.2.84.1/
+        description: Network controller
+
+    - Proxmox:
+        icon: sh-proxmox-light
+        href: https://proxmox.legoland.tech/
+        siteMonitor: https://10.2.84.7:8006/
+        description: Open-source virtualization platform
+
+    - Proxmox Backup Server:
+        icon: sh-proxmox-light
+        href: https://backup.legoland.tech/
+        siteMonitor: https://209.209.9.83:8007/
+        description: Open-source backup solution
+
+    - Caddy:
+        icon: sh-caddy-light
+        siteMonitor: http://10.2.84.100:2019/config/
+        description: Reverse proxy
+
+    - AdGuard Home:
+        icon: sh-adguard-home-light
+        href: https://adblock.legoland.tech/
+        siteMonitor: http://10.2.84.101/
+        description: Ad blocker
+
+    - Speedtest:
+        icon: sh-speedtest-light
+        href: https://speedtest.legoland.tech/
+        siteMonitor: https://10.2.84.106:8443/
+        description: Internet speed tracker
+        widget:
+            type: speedtest
+            url: https://10.2.84.106:8443
+            version: 2
+            key: {{ vault_homepage_speedtest_key }}
+            bitratePrecision: 2 # optional, default is 0
+
+- Media:
+    - FreshRSS:
+        icon: sh-freshrss-light
+        href: https://news.legoland.tech/
+        siteMonitor: http://10.2.84.109:8088/
+        description: A free, self-hostable feed aggregator
+
+    - Immich:
+        icon: sh-immich-light
+        href: https://photos.legoland.tech/
+        siteMonitor: http://10.2.84.114:2283/
+        description: Photo manager
+
+    - Plex:
+        icon: sh-plex-light
+        href: https://plex.legoland.tech/
+        siteMonitor: https://10.2.84.102:32400/
+        description: Media server
+
+    - Radarr:
+        icon: sh-radarr-light
+        href: https://movies.legoland.tech/
+        siteMonitor: http://10.2.84.104:7878/
+        description: Movie manager
+
+    - Sonarr:
+        icon: sh-sonarr-light
+        href: https://tv.legoland.tech/
+        siteMonitor: http://10.2.84.105:8989/
+        description: TV shows manager
+
+- Utilities:
+    - Transmission:
+        icon: sh-transmission-light
+        href: https://homelab.triton.usbx.me/transmission/web/
+        siteMonitor: https://homelab.triton.usbx.me/transmission/web/
+        description: Torrent client
+
+    - Paperless:
+        icon: sh-paperless-ngx-light
+        href: https://docs.legoland.tech/
+        siteMonitor: http://10.2.84.108:8000/
+        description: Paper(less) documents manager
+
+    - Prowlarr:
+        icon: sh-prowlarr-light
+        href: https://indexer.legoland.tech/
+        siteMonitor: http://10.2.84.103:9696/
+        description: Indexers manager
+
+    - Glances:
+        icon: sh-glances-light
+        href: https://monitoring.legoland.tech/
+        siteMonitor: http://10.2.84.7:61208/
+        description: System monitoring tool
+
+    - Pocket ID:
+        icon: sh-pocket-id-light
+        href: https://id.legoland.tech/
+        siteMonitor: https://id.legoland.tech/
+        description: Simple OIDC provider
+
+    - Bar Assistant:
+        icon: sh-bar-assistant-light
+        href: https://bar.legoland.tech/
+        siteMonitor: http://10.2.84.107:8080/
+        description: All-in-one solution for managing your home bar
+
+    - Gitea:
+        icon: sh-gitea-light
+        href: https://git.legoland.tech/
+        siteMonitor: http://10.2.84.112:3000/
+        description: Git with a cup of tea!
