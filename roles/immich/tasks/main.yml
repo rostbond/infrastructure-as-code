@@ -27,9 +27,8 @@
 - name: Setup Redis
   containers.podman.podman_container:
     name: immich-redis
-    image: >
-      docker.io/valkey/valkey:9
-      @sha256:fb8d272e529ea567b9bf1302245796f21a2672b8368ca3fcb938ac334e613c8f
+    image: "docker.io/valkey/valkey:9\
+      @sha256:fb8d272e529ea567b9bf1302245796f21a2672b8368ca3fcb938ac334e613c8f"
     network: "immich_network"
     state: present
     generate_systemd:
@@ -41,9 +40,8 @@
 - name: Setup Postgres
   containers.podman.podman_container:
     name: immich-db
-    image: >
-      ghcr.io/immich-app/postgres:14-vectorchord0.4.3-pgvectors0.2.0
-      @sha256:bcf63357191b76a916ae5eb93464d65c07511da41e3bf7a8416db519b40b1c23
+    image: "ghcr.io/immich-app/postgres:14-vectorchord0.4.3-pgvectors0.2.0\
+      @sha256:bcf63357191b76a916ae5eb93464d65c07511da41e3bf7a8416db519b40b1c23"
     network: "immich_network"
     state: present
     volumes:
