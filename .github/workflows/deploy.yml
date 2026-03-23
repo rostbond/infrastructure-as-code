@@ -1,0 +1,21 @@
+---
+name: CI/CD Deploy
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: ansible-galaxy install -r requirements.yml
+
+      - name: Run Ansible Playbook
+        run: >
+          ansible-playbook site.yml
+          --vault-password-file ~/.ansible_vault_password
