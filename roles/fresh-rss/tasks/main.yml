@@ -42,7 +42,7 @@
       TRUSTED_PROXY: 172.16.0.1/12 192.168.0.1/16
       OIDC_ENABLED: 1
       OIDC_CLIENT_ID: "{{ vault_fresh_rss_pocket_id_client_id }}"
-      OIDC_CLIENT_SECRET: "{{ vault_bar_assistant_pocket_id_client_secret }}"
+      OIDC_CLIENT_SECRET: "{{ vault_fresh_rss_pocket_id_client_secret }}"
       OIDC_CLIENT_CRYPTO_KEY: "{{ vault_fresh_rss_pocket_id_crypto_key }}"
       OIDC_PROVIDER_METADATA_URL: >-
         https://id.legoland.tech/.well-known/openid-configuration
