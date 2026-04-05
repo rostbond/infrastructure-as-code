@@ -112,21 +112,3 @@ git.legoland.tech {
 photos.legoland.tech {
 	reverse_proxy 10.2.84.114:2283
 }
-
-# ----------------------------------------------------------------------
-# Remote machines
-# ----------------------------------------------------------------------
-
-torrents.legoland.tech {
-    tls internal
-
-    reverse_proxy https://homelab.triton.usbx.me {
-        transport http {
-            tls_insecure_skip_verify
-        }
-
-        header_up Host homelab.triton.usbx.me
-        header_up X-Forwarded-For {remote_host}
-        header_up X-Forwarded-Proto https
-    }
-}

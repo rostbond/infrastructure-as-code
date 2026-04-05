@@ -60,7 +60,7 @@ all:
       mounts:
         mp0: "/data/.config/containers/radarr,mp=/var/lib/radarr,backup=0"
         mp1: "/data/media/movies,mp=/movies,backup=0"
-        mp2: "/mnt/ultra/downloads/transmission,mp=/downloads,backup=0"
+        mp2: "/mnt/ultra/downloads/qbittorrent,mp=/downloads,backup=0"
 
     sonarr:
       vmid: 105
@@ -74,7 +74,7 @@ all:
       mounts:
         mp0: "/data/.config/containers/sonarr,mp=/var/lib/sonarr,backup=0"
         mp1: "/data/media/shows,mp=/shows,backup=0"
-        mp2: "/mnt/ultra/downloads/transmission,mp=/downloads,backup=0"
+        mp2: "/mnt/ultra/downloads/qbittorrent,mp=/downloads,backup=0"
 
     speedtest:
       vmid: 106
