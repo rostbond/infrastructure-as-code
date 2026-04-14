@@ -23,12 +23,20 @@
   ansible.builtin.command: "loginctl enable-linger {{ ansible_user }}"
   changed_when: false
 
+- name: Enable Podman auto-update timer
+  ansible.builtin.systemd:
+    name: podman-auto-update.timer
+    state: started
+    enabled: true
+
 - name: Setup Redis
   containers.podman.podman_container:
     name: bar-assistant-redis
     image: docker.io/library/redis:latest
     network: "bar_assistant_network"
     state: present
+    labels:
+      io.containers.autoupdate: "registry"
     env:
       ALLOW_EMPTY_PASSWORD: true
     generate_systemd:
@@ -43,6 +51,8 @@
     image: docker.io/getmeili/meilisearch:v1.15
     network: "bar_assistant_network"
     state: present
+    labels:
+      io.containers.autoupdate: "registry"
     volumes:
       - "/config/meilisearch:/meili_data:Z"
     ports:
@@ -63,6 +73,8 @@
     image: docker.io/barassistant/server:v5
     network: "bar_assistant_network"
     state: present
+    labels:
+      io.containers.autoupdate: "registry"
     volumes:
       - "/config/bar:/var/www/cocktails/storage/bar-assistant:Z"
     ports:
@@ -97,6 +109,8 @@
     image: docker.io/barassistant/salt-rim:v4
     network: "bar_assistant_network"
     state: present
+    labels:
+      io.containers.autoupdate: "registry"
     ports:
       - "8080:8080"
     env:

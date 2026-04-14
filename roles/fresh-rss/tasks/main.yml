@@ -24,13 +24,20 @@
   register: speedtest_linger_check
   changed_when: false
 
+- name: Enable Podman auto-update timer
+  ansible.builtin.systemd:
+    name: podman-auto-update.timer
+    state: started
+    enabled: true
+
 - name: Setup Fresh RSS
   containers.podman.podman_container:
     name: fresh-rss
     image: docker.io/freshrss/freshrss:latest
     network: "fresh_rss_network"
     state: present
-    recreate: true
+    labels:
+      io.containers.autoupdate: "registry"
     ports:
       - "8088:80"
     volumes:

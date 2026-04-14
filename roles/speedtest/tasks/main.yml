@@ -33,13 +33,20 @@
   register: speedtest_linger_check
   changed_when: false
 
+- name: Enable Podman auto-update timer
+  ansible.builtin.systemd:
+    name: podman-auto-update.timer
+    state: started
+    enabled: true
+
 - name: Setup Speedtest
   containers.podman.podman_container:
     name: speedtest
     image: lscr.io/linuxserver/speedtest-tracker:latest
     network: "speedtest_network"
     state: present
-    recreate: true
+    labels:
+      io.containers.autoupdate: "registry"
     ports:
       - "8080:80"
       - "8443:443"

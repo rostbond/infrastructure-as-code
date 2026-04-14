@@ -24,6 +24,12 @@
   register: immich_linger_check
   changed_when: false
 
+- name: Enable Podman auto-update timer
+  ansible.builtin.systemd:
+    name: podman-auto-update.timer
+    state: started
+    enabled: true
+
 - name: Setup Redis
   containers.podman.podman_container:
     name: immich-redis
@@ -63,6 +69,8 @@
     image: ghcr.io/immich-app/immich-machine-learning:release
     network: "immich_network"
     state: present
+    labels:
+      io.containers.autoupdate: "registry"
     volumes:
       - "model-cache:/cache"
     generate_systemd:
@@ -77,6 +85,8 @@
     image: ghcr.io/immich-app/immich-server:release
     network: "immich_network"
     state: created
+    labels:
+      io.containers.autoupdate: "registry"
     ports:
       - "2283:2283"
     volumes:
