@@ -7,5 +7,5 @@ collections:
     version: 12.4.0
 
   - name: community.proxmox
-    version: 2.0.0-beta01
+    version: ">= 1.10.0"
   
