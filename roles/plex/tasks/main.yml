@@ -43,10 +43,18 @@
     name: plexmediaserver
     state: present
 
-- name: Create service
+- name: Create Systemd override directory for Plex
+  ansible.builtin.file:
+    path: /etc/systemd/system/plexmediaserver.service.d
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+    
+- name: Copy Plex service override configuration
   ansible.builtin.copy:
-    src: plexmediaserver.service
-    dest: /lib/systemd/system/plexmediaserver.service
+    src: override.conf
+    dest: /etc/systemd/system/plexmediaserver.service.d/override.conf
     owner: root
     group: root
     mode: '0644'
