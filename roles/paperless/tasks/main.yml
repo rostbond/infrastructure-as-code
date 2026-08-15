@@ -139,6 +139,7 @@
       PAPERLESS_CSRF_TRUSTED_ORIGINS: "https://docs.legoland.tech"
       PAPERLESS_USE_X_FORWARDED_HOST: "true"
       PAPERLESS_USE_X_FORWARDED_PORT: "true"
+      PAPERLESS_SECRET_KEY: "{{ vault_paperless_secret_key }}"
     generate_systemd:
       path: "/etc/systemd/system/"
       restart_policy: always
