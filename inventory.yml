@@ -32,8 +32,8 @@ all:
       memory: 2048
       disk: 20
       mounts:
-        mp0: "/data/media,mp=/media,backup=0"
-        mp1: "/data/.config/containers/plex,mp=/var/lib/plexmediaserver/Library/Application\ Support/Plex\ Media\ Server/,backup=0"
+        mp0: "/mnt/data/media,mp=/media,backup=0"
+        mp1: "/mnt/data/.config/containers/plex,mp=/var/lib/plexmediaserver/Library/Application\ Support/Plex\ Media\ Server/,backup=0"
         dev0: "/dev/dri/card0,gid=44"
         dev1: "/dev/dri/renderD128,gid=104"
 
@@ -46,7 +46,7 @@ all:
       memory: 512
       disk: 4
       mounts:
-        mp0: "/data/.config/containers/prowlarr,mp=/var/lib/prowlarr,backup=0"
+        mp0: "/mnt/data/.config/containers/prowlarr,mp=/var/lib/prowlarr,backup=0"
 
     radarr:
       vmid: 104
@@ -58,8 +58,8 @@ all:
       memory: 1024
       disk: 4
       mounts:
-        mp0: "/data/.config/containers/radarr,mp=/var/lib/radarr,backup=0"
-        mp1: "/data/media/movies,mp=/movies,backup=0"
+        mp0: "/mnt/data/.config/containers/radarr,mp=/var/lib/radarr,backup=0"
+        mp1: "/mnt/data/media/movies,mp=/movies,backup=0"
         mp2: "/mnt/ultra/downloads/qbittorrent,mp=/downloads,backup=0"
 
     sonarr:
@@ -72,8 +72,8 @@ all:
       memory: 1024
       disk: 4
       mounts:
-        mp0: "/data/.config/containers/sonarr,mp=/var/lib/sonarr,backup=0"
-        mp1: "/data/media/shows,mp=/shows,backup=0"
+        mp0: "/mnt/data/.config/containers/sonarr,mp=/var/lib/sonarr,backup=0"
+        mp1: "/mnt/data/media/shows,mp=/shows,backup=0"
         mp2: "/mnt/ultra/downloads/qbittorrent,mp=/downloads,backup=0"
 
     speedtest:
@@ -85,7 +85,7 @@ all:
       memory: 1024
       disk: 4
       mounts:
-        mp0: "/data/.config/containers/speedtest,mp=/config,backup=0"
+        mp0: "/mnt/data/.config/containers/speedtest,mp=/config,backup=0"
 
     bar-assistant:
       vmid: 107
@@ -96,7 +96,7 @@ all:
       memory: 1024
       disk: 4
       mounts:
-        mp0: "/data/.config/containers/bar-assistant,mp=/config,backup=0"
+        mp0: "/mnt/data/.config/containers/bar-assistant,mp=/config,backup=0"
 
     paperless:
       vmid: 108
@@ -107,8 +107,8 @@ all:
       memory: 2048
       disk: 20
       mounts:
-        mp0: "/data/.config/containers/paperless,mp=/config,backup=0"
-        mp1: "/data/docs,mp=/data,backup=0"
+        mp0: "/mnt/data/.config/containers/paperless,mp=/config,backup=0"
+        mp1: "/mnt/data/docs,mp=/data,backup=0"
 
     fresh-rss:
       vmid: 109
@@ -119,7 +119,7 @@ all:
       memory: 1024
       disk: 4
       mounts:
-        mp0: "/data/.config/containers/fresh-rss,mp=/config,backup=0"
+        mp0: "/mnt/data/.config/containers/fresh-rss,mp=/config,backup=0"
 
     pocket-id:
       vmid: 110
@@ -130,7 +130,7 @@ all:
       memory: 512
       disk: 4
       mounts:
-        mp0: "/data/.config/containers/pocket-id,mp=/opt/pocket-id/data,backup=0"
+        mp0: "/mnt/data/.config/containers/pocket-id,mp=/opt/pocket-id/data,backup=0"
 
     homepage:
       vmid: 111
@@ -150,7 +150,7 @@ all:
       memory: 512
       disk: 4
       mounts:
-        mp0: "/data/.config/containers/gitea,mp=/var/lib/gitea/data,backup=0"
+        mp0: "/mnt/data/.config/containers/gitea,mp=/var/lib/gitea/data,backup=0"
 
     immich:
       vmid: 114
@@ -161,8 +161,8 @@ all:
       memory: 8192
       disk: 20
       mounts:
-        mp0: "/data/media/photos/immich,mp=/photos,backup=0"
-        mp1: "/data/.config/containers/immich,mp=/postgres,backup=0"
+        mp0: "/mnt/data/media/photos/immich,mp=/photos,backup=0"
+        mp1: "/mnt/data/.config/containers/immich,mp=/postgres,backup=0"
 
   children:
     hypervisor:
