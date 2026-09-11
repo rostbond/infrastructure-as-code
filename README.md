@@ -66,7 +66,6 @@ To eliminate the risks of the public internet, this infrastructure follows Zero-
 │   ├── adguard/          # Network-wide ads & trackers blocking DNS server 
 │   ├── bar-assistant/    # All-in-one solution for managing your home bar  
 │   ├── caddy/            # Reverse proxy with automatic  automatic HTTPS 
-│   ├── fresh-rss/        # Free, self-hostable feed aggregator  
 │   ├── gitea/            # Self-hosted all-in-one software development service 
 │   ├── homepage/         # Highly customizable homepage 
 │   ├── immich/           # High performance photo/video management solution 

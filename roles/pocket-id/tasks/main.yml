@@ -36,7 +36,7 @@
     url: |
       {{
         pocket_id_api_response.json.assets
-        | selectattr('name', 'equalto', 'pocket-id-linux-amd64')
+        | selectattr('name', 'equalto', 'pocket-id_linux_amd64')
         | map(attribute='browser_download_url')
         | first
       }}

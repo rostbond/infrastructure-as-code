@@ -81,7 +81,7 @@
       - "8082:8080"
     env:
       APP_ENV: local
-      APP_URL: https://bar.legoland.tech/bar
+      APP_URL: https://bar.skyfall.im/bar
       MEILISEARCH_KEY: "{{ vault_bar_assistant_meili_key }}"
       MEILISEARCH_HOST: http://bar-assistant-meilisearch:7700
       REDIS_HOST: tcp://bar-assistant-redis
@@ -89,11 +89,11 @@
       CACHE_DRIVER: redis
       SESSION_DRIVER: redis
       ALLOW_REGISTRATION: false
-      POCKETID_BASE_URL: https://id.legoland.tech
+      POCKETID_BASE_URL: https://id.skyfall.im
       POCKETID_CLIENT_ID: "{{ vault_bar_assistant_pocket_id_client_id }}"
       POCKETID_CLIENT_SECRET: >-
         "{{ vault_bar_assistant_pocket_id_client_secret }}"
-      POCKETID_REDIRECT_URI: https://bar.legoland.tech/oauth/callback
+      POCKETID_REDIRECT_URI: https://bar.skyfall.im/oauth/callback
     generate_systemd:
       path: "/etc/systemd/system/"
       restart_policy: always
@@ -114,8 +114,8 @@
     ports:
       - "8080:8080"
     env:
-      API_URL: https://bar.legoland.tech/bar
-      MEILISEARCH_URL: https://bar.legoland.tech/search
+      API_URL: https://bar.skyfall.im/bar
+      MEILISEARCH_URL: https://bar.skyfall.im/search
     generate_systemd:
       path: "/etc/systemd/system/"
       restart_policy: always

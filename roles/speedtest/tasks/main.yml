@@ -56,10 +56,10 @@
       PUID: 1000
       PGID: 1000
       APP_KEY: "{{ vault_speedtest_key }}"
-      APP_NAME: "Legoland's Speedtest"
+      APP_NAME: "Skyfall's Speedtest"
       APP_TIMEZONE: "Europe/Madrid"
-      APP_URL: "https://speedtest.legoland.tech"
-      ASSET_URL: "https://speedtest.legoland.tech"
+      APP_URL: "https://speedtest.skyfall.im"
+      ASSET_URL: "https://speedtest.skyfall.im"
       DB_CONNECTION: "sqlite"
       DISPLAY_TIMEZONE: "Europe/Madrid"
       PUBLIC_DASHBOARD: "true"

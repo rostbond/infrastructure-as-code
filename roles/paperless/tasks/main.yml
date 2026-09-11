@@ -135,8 +135,8 @@
       PAPERLESS_TIKA_ENABLED: 1
       PAPERLESS_TIKA_GOTENBERG_ENDPOINT: http://paperless-gotenberg:3000
       PAPERLESS_TIKA_ENDPOINT: http://paperless-tika:9998
-      PAPERLESS_ALLOWED_HOSTS: "docs.legoland.tech"
-      PAPERLESS_CSRF_TRUSTED_ORIGINS: "https://docs.legoland.tech"
+      PAPERLESS_ALLOWED_HOSTS: "docs.skyfall.im"
+      PAPERLESS_CSRF_TRUSTED_ORIGINS: "https://docs.skyfall.im"
       PAPERLESS_USE_X_FORWARDED_HOST: "true"
       PAPERLESS_USE_X_FORWARDED_PORT: "true"
       PAPERLESS_SECRET_KEY: "{{ vault_paperless_secret_key }}"

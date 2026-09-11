@@ -49,11 +49,8 @@
         | first
       }}
     dest: "/opt/Prowlarr"
-    keep_newer: true
     extra_opts:
       - --strip=1
-      - --no-anchored
-      - Prowlarr
 
 - name: Create service
   ansible.builtin.copy:

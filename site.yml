@@ -141,13 +141,6 @@
   roles:
     - caddy
 
-- name: Fresh RSS setup
-  hosts: fresh-rss
-  tags: fresh-rss
-  gather_facts: false
-  roles:
-    - fresh-rss
-
 - name: Gitea setup
   hosts: gitea
   tags: gitea

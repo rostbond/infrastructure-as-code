@@ -10,7 +10,7 @@ RestartSec=1
 User=root
 WorkingDirectory=/opt/homepage/
 Environment="HOMEPAGE_CONFIG_DIR=/opt/homepage/config"
-Environment="HOMEPAGE_ALLOWED_HOSTS=localhost:3000,10.2.84.111:3000,home.legoland.tech"
+Environment="HOMEPAGE_ALLOWED_HOSTS=localhost:3000,10.2.84.111:3000,home.skyfall.im"
 ExecStart=/usr/local/bin/pnpm start
 
 [Install]

@@ -15,7 +15,6 @@
   ansible.builtin.package:
     name:
       - nodejs
-      - npm
       - git
     state: present
 

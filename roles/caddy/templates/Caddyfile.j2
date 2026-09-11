@@ -3,7 +3,7 @@
 
 {
 	admin 0.0.0.0:2019
-	email null@legoland.tech
+	email null@skyfall.im
 	acme_dns digitalocean {{ vault_caddy_digital_ocean_token }}
 }
 
@@ -11,7 +11,7 @@
 # Unifi Express
 # ----------------------------------------------------------------------
 
-network.legoland.tech {
+network.skyfall.im {
 	reverse_proxy 10.2.84.1:443 {
 		transport http {
 			tls_insecure_skip_verify
@@ -25,7 +25,7 @@ network.legoland.tech {
 # Proxmox
 # ----------------------------------------------------------------------
 
-proxmox.legoland.tech {
+proxmox.skyfall.im {
 	reverse_proxy 10.2.84.7:8006 {
 		transport http {
 			tls_insecure_skip_verify
@@ -33,7 +33,7 @@ proxmox.legoland.tech {
 	}
 }
 
-monitoring.legoland.tech {
+monitoring.skyfall.im {
 	reverse_proxy 10.2.84.7:61208
 }
 
@@ -41,15 +41,15 @@ monitoring.legoland.tech {
 # Containers
 # ----------------------------------------------------------------------
 
-proxy.legoland.tech {
+proxy.skyfall.im {
 	reverse_proxy 10.2.84.100:2019
 }
 
-adblock.legoland.tech {
+adblock.skyfall.im {
 	reverse_proxy 10.2.84.101:80
 }
 
-plex.legoland.tech {
+plex.skyfall.im {
 	reverse_proxy 10.2.84.102:32400 {
 		transport http {
 			tls_insecure_skip_verify
@@ -57,23 +57,23 @@ plex.legoland.tech {
 	}
 }
 
-indexer.legoland.tech {
+indexer.skyfall.im {
 	reverse_proxy 10.2.84.103:9696
 }
 
-movies.legoland.tech {
+movies.skyfall.im {
 	reverse_proxy 10.2.84.104:7878
 }
 
-tv.legoland.tech {
+tv.skyfall.im {
 	reverse_proxy 10.2.84.105:8989
 }
 
-speedtest.legoland.tech {
+speedtest.skyfall.im {
 	reverse_proxy 10.2.84.106:8080
 }
 
-bar.legoland.tech {
+bar.skyfall.im {
     handle_path /* {
         reverse_proxy 10.2.84.107:8080
     }
@@ -87,28 +87,28 @@ bar.legoland.tech {
     }
 }
 
-docs.legoland.tech {
+docs.skyfall.im {
 	reverse_proxy 10.2.84.108:8000
 }
 
-news.legoland.tech {
+news.skyfall.im {
     reverse_proxy 10.2.84.109:8088
 }
 
-id.legoland.tech {
+id.skyfall.im {
 	reverse_proxy 10.2.84.110:1411
 }
 
-home.legoland.tech {
+home.skyfall.im {
 	reverse_proxy 10.2.84.111:3000
 }
 
-git.legoland.tech {
+git.skyfall.im {
     reverse_proxy 10.2.84.112:3000
 }
 
 # 113
 
-photos.legoland.tech {
+photos.skyfall.im {
 	reverse_proxy 10.2.84.114:2283
 }
