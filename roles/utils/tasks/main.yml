@@ -1,0 +1,135 @@
+---
+
+- name: Wait for system to become reachable
+  ansible.builtin.wait_for_connection:
+    timeout: 60
+
+- name: Now gather facts
+  ansible.builtin.setup:
+
+- name: Update apt cache if it's older than 1 hour
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: Install required packages
+  ansible.builtin.package:
+    name:
+      - curl
+      - openssh-client
+    state: present
+
+- name: Create application directory
+  ansible.builtin.file:
+    path: "/opt/skyfall"
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Create configuration directory
+  ansible.builtin.file:
+    path: "/etc/skyfall"
+    state: directory
+    owner: root
+    group: root
+    mode: "0750"
+
+- name: Create SSH directory
+  ansible.builtin.file:
+    path: "/root/.ssh/"
+    state: directory
+    owner: root
+    group: root
+    mode: "0700"
+
+- name: Generate SSH key
+  ansible.builtin.command:
+    cmd: >
+      ssh-keygen
+      -t ed25519
+      -f /root/.ssh/id_ed25519
+      -N ""
+      -C "utils"
+    creates: /root/.ssh/id_ed25519
+
+- name: Deploy calendar script
+  ansible.builtin.template:
+    src: push-calendars.sh.j2
+    dest: "/opt/skyfall/push-calendars.sh"
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Deploy Gatus script
+  ansible.builtin.template:
+    src: gatus-check.sh.j2
+    dest: "/opt/skyfall/gatus-check.sh"
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Deploy calendar configuration
+  ansible.builtin.template:
+    src: calendars.env.j2
+    dest: "/etc/skyfall/calendars.env"
+    owner: root
+    group: root
+    mode: "0640"
+
+- name: Deploy Gatus configuration
+  ansible.builtin.template:
+    src: gatus.env.j2
+    dest: "/etc/skyfall/gatus.env"
+    owner: root
+    group: root
+    mode: "0640"
+
+- name: Install calendar systemd service
+  ansible.builtin.copy:
+    src: skyfall-calendars.service
+    dest: /lib/systemd/system/skyfall-calendars.service
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Reload systemd
+
+- name: Install calendar systemd timer
+  ansible.builtin.copy:
+    src: skyfall-calendars.timer
+    dest: /lib/systemd/system/skyfall-calendars.timer
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Reload systemd
+
+- name: Install Gatus systemd service
+  ansible.builtin.copy:
+    src: skyfall-gatus.service
+    dest: /lib/systemd/system/skyfall-gatus.service
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Reload systemd
+
+- name: Install Gatus systemd timer
+  ansible.builtin.copy:
+    src: skyfall-gatus.timer
+    dest: /lib/systemd/system/skyfall-gatus.timer
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Reload systemd
+
+- name: Enable and start calendar timer
+  ansible.builtin.systemd:
+    name: skyfall-calendars.timer
+    enabled: true
+    state: started
+    daemon_reload: true
+
+- name: Enable and start Gatus timer
+  ansible.builtin.systemd:
+    name: skyfall-gatus.timer
+    enabled: true
+    state: started

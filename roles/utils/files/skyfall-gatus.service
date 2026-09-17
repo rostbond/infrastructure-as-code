@@ -1,0 +1,8 @@
+[Unit]
+Description=Send service health checks to Gatus
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/opt/skyfall/gatus-check.sh

@@ -1,0 +1,26 @@
+#!/bin/bash
+set -euo pipefail
+
+source /etc/skyfall/calendars.env
+
+tmp_dir="$(mktemp -d)"
+trap 'rm -rf "$tmp_dir"' EXIT
+
+curl -fsSL \
+  "http://10.2.84.105:8989/feed/v3/calendar/sonarr.ics?asAllDay=true" \
+  --header "X-Api-Key: ${API_KEY_SONARR}" \
+  -o "${tmp_dir}/sonarr.ics"
+
+curl -fsSL \
+  "http://10.2.84.104:7878/feed/v3/calendar/radarr.ics?asAllDay=true" \
+  --header "X-Api-Key: ${API_KEY_RADARR}" \
+  -o "${tmp_dir}/radarr.ics"
+
+scp \
+  -i "/root/.ssh/id_ed25519" \
+  -o StrictHostKeyChecking=accept-new \
+  "${tmp_dir}/sonarr.ics" \
+  "${tmp_dir}/radarr.ics" \
+  "${VPS_USER}@${VPS_IP}:${VPS_PATH}/"
+
+echo "Calendars updated: $(date)"

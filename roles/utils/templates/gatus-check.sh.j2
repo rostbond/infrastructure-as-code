@@ -1,0 +1,52 @@
+#!/bin/bash
+set -euo pipefail
+
+source /etc/skyfall/gatus.env
+
+gatus_api_base="https://health.skyfall.im/api/v1/endpoints"
+
+services=(
+  "proxmox_tv-skyfall-im|https://tv.skyfall.im"
+  "proxmox_speedtest-skyfall-im|https://speedtest.skyfall.im"
+  "proxmox_plex-skyfall-im|https://plex.skyfall.im/identity"
+  "proxmox_indexer-skyfall-im|https://indexer.skyfall.im"
+  "proxmox_id-skyfall-im|https://id.skyfall.im"
+  "proxmox_home-skyfall-im|https://home.skyfall.im"
+  "proxmox_git-skyfall-im|https://git.skyfall.im"
+  "proxmox_docs-skyfall-im|https://docs.skyfall.im"
+  "proxmox_adblock-skyfall-im|https://adblock.skyfall.im"
+  "proxmox_photos-skyfall-im|https://photos.skyfall.im"
+  "proxmox_bar-skyfall-im|https://bar.skyfall.im"
+  "proxmox_proxmox-skyfall-im|https://proxmox.skyfall.im"
+  "proxmox_movies-skyfall-im|https://movies.skyfall.im"
+)
+
+for service in "${services[@]}"; do
+    key="${service%%|*}"
+    url="${service##*|}"
+
+    response=$(
+        /usr/bin/curl \
+            -skL \
+            --connect-timeout 10 \
+            --max-time 30 \
+            -w "%{http_code} %{time_total}" \
+            -o /dev/null \
+            "${url}"
+    )
+
+    code="${response%% *}"
+    time="${response#* }"
+
+    if [ "${code}" -eq 200 ]; then
+        success=true
+    else
+        success=false
+    fi
+
+    /usr/bin/curl \
+        -sS \
+        -X POST \
+        "${gatus_api_base}/${key}/external?success=${success}&duration=${time}s" \
+        -H "Authorization: Bearer ${GATUS_TOKEN}"
+done

@@ -155,6 +155,13 @@
   roles:
     - homepage
 
+- name: Utils setup
+  hosts: utils
+  tags: utils
+  gather_facts: false
+  roles:
+    - utils
+
 - name: Immich setup
   hosts: immich
   tags: immich

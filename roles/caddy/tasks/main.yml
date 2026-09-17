@@ -30,7 +30,7 @@
     mode: '0644'
 
 - name: Add Caddy repository
-  ansible.builtin.apt_repository:
+  ansible.builtin.deb822_repository:
     repo: >-
       deb [signed-by=/etc/apt/keyrings/caddy.asc]
       https://dl.cloudsmith.io/public/caddy/stable/deb/debian any-version main
@@ -81,7 +81,7 @@
     mode: '0644'
 
 - name: Add Tailscale repository
-  ansible.builtin.apt_repository:
+  ansible.builtin.deb822_repository:
     repo: >-
       deb [signed-by=/etc/apt/keyrings/tailscale.gpg]
       https://pkgs.tailscale.com/stable/debian sid main

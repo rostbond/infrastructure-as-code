@@ -1,0 +1,8 @@
+[Unit]
+Description=Update Sonarr and Radarr calendars
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/opt/skyfall/push-calendars.sh

@@ -30,7 +30,7 @@
     mode: '0644'
 
 - name: Add Plex repository
-  ansible.builtin.apt_repository:
+  ansible.builtin.deb822_repository:
     repo: >-
       deb [signed-by=/etc/apt/keyrings/plexmediaserver.v2.gpg]
       https://repo.plex.tv/deb/ public main
