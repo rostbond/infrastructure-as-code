@@ -70,6 +70,7 @@ To eliminate the risks of the public internet, this infrastructure follows Zero-
 │   ├── homepage/         # Highly customizable homepage 
 │   ├── immich/           # High performance photo/video management solution 
 │   ├── paperless/        # Supercharged document management system
+│   ├── utils/            # Set of small utils
 │   ├── plex/             # Media streaming service
 │   ├── pocket-id/        # OIDC provider with passkeys authentication 
 │   ├── prowlarr/         # Indexer manager/proxy
@@ -81,7 +82,8 @@ To eliminate the risks of the public internet, this infrastructure follows Zero-
 ├── inventory.yml         # Hosts and their configuration
 ├── requirements.yml      # Collections need to be installed
 ├── site.yml              # Master playbook
-└── TODO.md               # Things to do
+├── TODO.md               # Things to do
+└── update.yml            # Update packages on each and every LXC
 ```
 
 ## Prerequisites
@@ -117,6 +119,11 @@ To eliminate the risks of the public internet, this infrastructure follows Zero-
     vault_homepage_speedtest_key: ""
     vault_homepage_unifi_user: ""
     vault_homepage_unifi_password: ""
+    vault_paperless_secret_key: ""
+    vault_sonarr_api_key: ""
+    vault_radarr_api_key: ""
+    vault_gatus_token: ""
+    vault_vps_ip: ""
     ```
 
 ## Usage
