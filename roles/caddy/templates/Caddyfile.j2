@@ -26,7 +26,7 @@ network.skyfall.im {
 # ----------------------------------------------------------------------
 
 proxmox.skyfall.im {
-	reverse_proxy 10.2.84.7:8006 {
+	reverse_proxy 10.2.84.16:8006 {
 		transport http {
 			tls_insecure_skip_verify
 		}
@@ -34,7 +34,7 @@ proxmox.skyfall.im {
 }
 
 monitoring.skyfall.im {
-	reverse_proxy 10.2.84.7:61208
+	reverse_proxy 10.2.84.16:61208
 }
 
 # ----------------------------------------------------------------------
