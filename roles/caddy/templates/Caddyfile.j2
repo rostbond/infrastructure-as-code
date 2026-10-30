@@ -8,7 +8,7 @@
 }
 
 # ----------------------------------------------------------------------
-# Unifi Express
+# Unifi
 # ----------------------------------------------------------------------
 
 network.skyfall.im {
@@ -16,9 +16,17 @@ network.skyfall.im {
 		transport http {
 			tls_insecure_skip_verify
 		}
-		# header_up -Authorization
 		header_up Host {hostport}
 	}
+}
+
+nas.skyfall.im {
+    reverse_proxy 10.2.84.2:443 {
+        transport http {
+            tls_insecure_skip_verify
+        }
+        header_up Host {hostport}
+    }
 }
 
 # ----------------------------------------------------------------------
