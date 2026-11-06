@@ -55,7 +55,7 @@ all:
       memory: 1024
       disk: 4
       mounts:
-        mp0: "/mnt/data/media/movies,mp=/movies,backup=0"
+        mp0: "/mnt/data/media/movies-other,mp=/movies,backup=0"
         mp1: "/mnt/ultra/downloads/qbittorrent,mp=/downloads,backup=0"
 
     sonarr:
@@ -68,7 +68,7 @@ all:
       memory: 1024
       disk: 4
       mounts:
-        mp0: "/mnt/data/media/shows,mp=/shows,backup=0"
+        mp0: "/mnt/data/media/shows-other,mp=/shows,backup=0"
         mp1: "/mnt/ultra/downloads/qbittorrent,mp=/downloads,backup=0"
 
     speedtest:
