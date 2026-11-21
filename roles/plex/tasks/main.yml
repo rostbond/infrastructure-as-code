@@ -31,11 +31,16 @@
 
 - name: Add Plex repository
   ansible.builtin.deb822_repository:
-    repo: >-
-      deb [signed-by=/etc/apt/keyrings/plexmediaserver.v2.gpg]
-      https://repo.plex.tv/deb/ public main
+    name: plex
+    types: deb
+    uris: https://repo.plex.tv/deb/
+    suites: public
+    components: main
+    signed_by: /etc/apt/keyrings/plexmediaserver.v2.gpg
     state: present
-    filename: plex
+
+- name: Update apt cache
+  ansible.builtin.apt:
     update_cache: true
 
 - name: Install Plex Media Server

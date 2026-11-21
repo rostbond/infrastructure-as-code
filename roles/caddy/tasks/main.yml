@@ -31,11 +31,16 @@
 
 - name: Add Caddy repository
   ansible.builtin.deb822_repository:
-    repo: >-
-      deb [signed-by=/etc/apt/keyrings/caddy.asc]
-      https://dl.cloudsmith.io/public/caddy/stable/deb/debian any-version main
+    name: caddy
+    types: deb
+    uris: https://dl.cloudsmith.io/public/caddy/stable/deb/debian
+    suites: any-version
+    components: main
+    signed_by: /etc/apt/keyrings/caddy.asc
     state: present
-    filename: caddy
+
+- name: Update apt cache
+  ansible.builtin.apt:
     update_cache: true
 
 - name: Install Caddy
@@ -82,11 +87,16 @@
 
 - name: Add Tailscale repository
   ansible.builtin.deb822_repository:
-    repo: >-
-      deb [signed-by=/etc/apt/keyrings/tailscale.gpg]
-      https://pkgs.tailscale.com/stable/debian sid main
+    name: tailscale
+    types: deb
+    uris: https://pkgs.tailscale.com/stable/debian
+    suites: sid
+    components: main
+    signed_by: /etc/apt/keyrings/tailscale.gpg
     state: present
-    filename: tailscale
+    
+- name: Update apt cache
+  ansible.builtin.apt:
     update_cache: true
 
 - name: Install Tailscale
